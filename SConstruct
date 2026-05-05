@@ -12,17 +12,20 @@ env = SConscript("godot-cpp/SConstruct")
 # - CPPDEFINES are for pre-processor defines
 # - LINKFLAGS are for linking flags
 
-# tweak this if you want to use different folders, or more folders, to store your source code in.
-
 if env["platform"] == "windows":
     env.Append(CPPPATH=['include/'])
-    env.Append(LIBPATH=['lib/SDL2/'])
-    env.Append(LIBS=['SDL2.dll.dll'])
+    env.Append(LIBPATH=['lib/SDL3/'])
+    print("CXX is: " + env["CXX"])
+    if env["CXX"] == "$CC":
+        # Different .lib-file for MS Visual C.
+        # You can download these with the dlls from SDL's releases: https://github.com/libsdl-org/SDL/releases
+        env.Append(LIBS=['SDL3'])
+    else:
+        env.Append(LIBS=['SDL3.dll.dll'])
 
 elif env["platform"] == "linux":
     env.Append(CPPPATH=['include/'])
-    env.Append(LINKFLAGS='-lSDL2')
-    #env.Append(LIBS="libSDL2")
+    env.Append(LINKFLAGS='-lSDL3')
 
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
